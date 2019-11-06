@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <script src="https://cache.amap.com/lbs/static/es5.min.js"></script>
+    <script type="text/javascript" src="data/data.json"></script>
+    <!-- <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script> -->
+    <title>金融生态地图</title>
+    <link href="css/sandbox.css" rel="stylesheet">
+  	<link href="css/drawer.min.css" rel="stylesheet">
+    <style>
+        html,
+        body,
+        #container {
+          width: 100%;
+          height: 100%;
+        }
+        p.my-desc {
+            margin: 5px 0;
+            line-height: 150%;
+        }
+
+        #map-features .input-item {
+	       height: 2rem;
+	    }
+
+        .custom-input-card{
+            width: 18rem;
+        }
+        .custom-input-card .btn:last-child{
+            margin-left: 1rem;
+        }
+        .content-window-card{
+            position: relative;
+            width: 23rem;
+            padding: 0.75rem 0 0 1.25rem;
+            box-shadow: none;
+            bottom: 0;
+            left: 0;
+        }
+        .content-window-card p{
+            height: 2rem;
+        }
+
+        label {
+            width: 55px;
+            height: 26px;
+            line-height: 26px;
+            margin-bottom: 0;
+        }
+        button.btn {
+            width: 80px;
+        }
+    </style>
+</head>
+<body class="drawer drawer--left">
+	<header role="banner">
+	    <button type="button" class="drawer-toggle drawer-hamburger">
+	      <span class="sr-only">toggle navigation</span>
+	      <span class="drawer-hamburger-icon"></span>
+	    </button>
+	    <nav class="drawer-nav" role="navigation">
+	      <ul class="drawer-menu">
+	        <li><a class="drawer-brand">设置</a></li>
+	        <!-- <li><a class="drawer-menu-item">Top</a></li> -->
+
+            <li class="drawer-dropdown">
+              <a class="drawer-menu-item" data-target="#" href="#" data-toggle="dropdown" role="button" aria-expanded="false">
+                点聚合 <span class="drawer-caret"></span>
+              </a>
+              <ul class="drawer-dropdown-menu">
+                <div id="map-clusterer">
+                    <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='clustereron'><span>打开</span></div></a></li>
+                  <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='clustereroff' checked><span>关闭（同时清除标记）</span></div></a></li>
+                </div>
+              </ul>
+            </li>
+	        <li class="drawer-dropdown">
+	          <a class="drawer-menu-item" data-target="#" href="#" data-toggle="dropdown" role="button" aria-expanded="false">
+	            点标记 <span class="drawer-caret"></span>
+	          </a>
+	          <ul class="drawer-dropdown-menu">
+	          	<div id="map-point">
+		            <li><a class="drawer-dropdown-menu-item">
+		            	<div class="input-item">
+	                		<input type='checkbox' name='mapStyle' value='school' id='school' >
+	                		<span class="input-text"><strong>学校</strong></span>
+	              		</div>
+	              	</a></li>
+                    <li><a class="drawer-dropdown-menu-item">
+                        <div class="input-item">
+                            <input type='checkbox' name='mapStyle' value='company' id='company' >
+                            <span class="input-text"><strong>公司</strong></span>
+                        </div>
+                    </a></li>
+                    <li><a class="drawer-dropdown-menu-item">
+                        <div class="input-item">
+                            <input type='checkbox' name='mapStyle' value='business' id='business' >
+                            <span class="input-text"><strong>商户</strong></span>
+                        </div>
+                    </a></li>
+		        </div>
+	          </ul>
+	        </li>
+            <li class="drawer-dropdown">
+              <a class="drawer-menu-item" data-target="#" href="#" data-toggle="dropdown" role="button" aria-expanded="false">
+                 范围编辑 <span class="drawer-caret"></span>
+              </a>
+              <ul class="drawer-dropdown-menu">
+                <div id="map-clusterer">
+                    <li><a class="drawer-dropdown-menu-item"><button class="btn" onclick="circleEditor.open()" style="margin-bottom: 5px">开始编辑</button> </a></li>
+                  <li><a class="drawer-dropdown-menu-item"><button class="btn" onclick="circleEditor.close()">结束编辑</button> </a></li>
+                </div>
+              </ul>
+            </li>
+	        <li class="drawer-dropdown">
+	          <a class="drawer-menu-item" data-target="#" href="#" data-toggle="dropdown" role="button" aria-expanded="false">
+	            地图标注 <span class="drawer-caret"></span>
+	          </a>
+	          <ul class="drawer-dropdown-menu">
+	            <div id="map-features">
+	              <li><a class="drawer-dropdown-menu-item">
+	              <div class="input-item">
+	                <input type='checkbox' name='mapStyle' value='bg' checked>
+	                <span class="input-text">区域面（bg）</span>
+	              </div>
+	              </a></li>
+	              <li><a class="drawer-dropdown-menu-item">
+	              <div class="input-item">
+	                <input type='checkbox' name='mapStyle' value='road' checked>
+	                <span class="input-text">道路（road）</span>
+	              </div>
+	              </a></li>
+	              <li><a class="drawer-dropdown-menu-item">
+	              <div class="input-item">
+	                <input type='checkbox' name='mapStyle' value='building' checked>
+	                <span class="input-text">建筑物（building）</span>
+	              </div>
+	              </a></li>
+	              <li><a class="drawer-dropdown-menu-item">
+	              <div class="input-item">
+	                <input type='checkbox' name='mapStyle' value='point' checked>
+	                <span class="input-text">标注（point）</span>
+	              </div>
+	              </a></li>
+	            </div>
+	          </ul>
+	        </li>
+	        <li class="drawer-dropdown">
+	          <a class="drawer-menu-item" href="#" data-toggle="dropdown" role="button" aria-expanded="false">
+	            地图主题 <span class="drawer-caret"></span>
+	          </a>
+	          <ul class="drawer-dropdown-menu">
+	            <div id="map-styles">
+	              <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='normal' checked><span>标准</span><span class="input-text">normal</span></div></a></li>
+	              <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='dark'><span>幻影黑</span><span class="input-text">dark</span></div></a></li>
+	              <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='light'><span>月光银</span><span class="input-text">light</span></div></a></li>
+	              <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='whitesmoke'><span>远山黛</span><span class="input-text">whitesmoke</span></div></a></li>
+	              <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='fresh'><span>草色青</span><span class="input-text">fresh</span></div></a></li>
+	              <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='grey'><span>雅士灰</span><span class="input-text">grey</span></div></a></li>
+	              <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='graffiti'><span>涂鸦</span><span class="input-text">graffiti</span></div></a></li>
+	              <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='macaron'><span>马卡龙</span><span class="input-text">macaron</span></div></a></li>
+	              <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='blue'><span>靛青蓝</span><span class="input-text">blue</span></div></a></li>
+	              <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='darkblue'><span>极夜蓝</span><span class="input-text">darkblue</span></div></a></li>
+	              <li><a class="drawer-dropdown-menu-item"><div class="input-item"><input type='radio' name='mapStyle' value='wine'><span>酱籽</span><span class="input-text">wine</span></div></a></li>
+	            </div>
+	          </ul>
+	        </li>
+            <li class="drawer-dropdown"><a href="数据管理.html" target="_blank" >&nbsp;&nbsp;&nbsp;数据管理&nbsp;&nbsp;&nbsp;</a></li>
+	      </ul>
+	    </nav>
+	  </header>
+    <div id="container"></div>
+    <div class="input-card" style="width: 125px">
+        <p><img src="pic/Marker2.png"  height="20" width="20" align="top"  />：有业务来往</p><br />
+        <p><img src="pic/Marker.png"  height="20" width="20" align="top"  />：无业务来往</p>
+    </div>
+
+<!-- 加载地图JSAPI脚本 -->
+<script src="https://webapi.amap.com/maps?v=1.4.15&key=e18d0a02c8a97e0e490d9ca998252af7&plugin=AMap.CircleEditor,AMap.Scale,AMap.OverView,AMap.ToolBar,AMap.OverView,AMap.ControlBar"></script>
+<script src="https://webapi.amap.com/ui/1.0/main.js"></script>
+<script>
+
+	// 创建地图：
+    var map = new AMap.Map('container', {
+        resizeEnable: true, //是否监控地图容器尺寸变化
+        zoom:13, //初始化地图层级
+        center: [121.14622951, 31.15897914], //初始化地图中心点
+        viewMode: '3D'
+        // pinch: 45
+        // showLabel: false //隐藏标注
+    });
+
+
+    // 地图属性设置：
+    // 地图控件
+    var scale = new AMap.Scale(),
+    controlBar = new AMap.ControlBar(),
+    overView = new AMap.OverView();
+
+    map.addControl(scale);
+    map.addControl(controlBar);
+    map.addControl(overView);
+
+    // 限制平移区域
+    // var mybounds = new AMap.Bounds([121.09911919, 31.11960267], [121.19464874, 31.18380142]);
+    // map.setLimitBounds(mybounds); 
+
+    // 设置地图显示要素
+    function setMapFeatures() {
+      	var features = [];
+      	var inputs = document.querySelectorAll("#map-features input");
+      	inputs.forEach(function(input) {
+        	if (input.checked) {
+        		features.push(input.value);
+        	}
+    	});
+      	map.setFeatures(features);
+    }
+
+    // 设置点标记隐藏显示：
+    function setPoint() {
+    	map.remove(school_markers);
+        map.remove(company_markers);
+        map.remove(business_markers);
+    	var inputs = document.querySelectorAll("#map-point input");
+    	for (var i = 0; i < inputs.length; i ++) {
+
+            if (inputs[i].checked) {
+                switch (inputs[i].value) {
+                case 'school':
+                    map.add(school_markers);
+                    break;
+                case 'company':
+                    map.add(company_markers);
+                    break;
+                case 'business':
+                    map.add(business_markers);
+                }
+            }
+    	}  		
+    }
+
+    //绑定checkbox点击事件
+    var inputs = document.querySelectorAll("#map-features input");
+    inputs.forEach(function(checkbox) {
+      checkbox.onclick = setMapFeatures;
+    });
+
+    var inputs2 = document.querySelectorAll("#map-point input");
+    inputs2.forEach(function(checkbox) {
+      checkbox.onclick = setPoint;
+    }); 
+
+
+    //绑定radio点击事件
+    var radios = document.querySelectorAll("#map-styles input");
+    radios.forEach(function(ratio) {
+      ratio.onclick = setMapStyle;
+    });
+
+    function setMapStyle() {
+      var styleName = "amap://styles/" + this.value;
+      map.setMapStyle(styleName);
+    }
+
+
+    var radios2 = document.querySelectorAll("#map-clusterer input");
+    radios2.forEach(function(ratio) {
+      ratio.onclick = setMapClusterer;
+    });
+
+
+
+    // 点聚合：
+    var cluster = [];
+    var cluster2 = [];
+    var cluster3 = [];
+    var cluster4 = [];
+    var cluster5 = [];
+    function setMapClusterer() { 
+        if (this.value === 'clustereron') {
+            if (document.getElementById("school").checked) {
+                map.plugin(["AMap.MarkerClusterer"],function () {
+                    cluster=new AMap.MarkerClusterer(map,school_markers);
+                });
+            }
+            if (document.getElementById("company_isl").checked) {
+                map.plugin(["AMap.MarkerClusterer"],function () {
+                    cluster2=new AMap.MarkerClusterer(map,company_markers_isl);
+                });
+            }
+            if (document.getElementById("business").checked) {
+                map.plugin(["AMap.MarkerClusterer"],function () {
+                    cluster3=new AMap.MarkerClusterer(map,business_markers);
+                });
+            }
+            if (document.getElementById("company_isi").checked) {
+                map.plugin(["AMap.MarkerClusterer"],function () {
+                    cluster4=new AMap.MarkerClusterer(map,company_markers_isi);
+                });
+            }
+            if (document.getElementById("company_rest").checked) {
+                map.plugin(["AMap.MarkerClusterer"],function () {
+                    cluster5=new AMap.MarkerClusterer(map,company_markers_rest);
+                });
+            }
+        } else {
+            // cluster.setMap(null);
+            map.remove(cluster);
+            map.remove(cluster2);
+            map.remove(cluster3);
+            map.remove(cluster4);
+            map.remove(cluster5);
+            document.getElementById("school").checked = false;
+            document.getElementById("company_isl").checked = false;
+            document.getElementById("business").checked = false;
+            document.getElementById("company_isi").checked = false;
+            document.getElementById("company_rest").checked = false;
+        }
+    }
+
+    // 创建中心点标记：
+    var icon = new AMap.Icon({
+    	size: new AMap.Size(40, 50),    // 图标尺寸
+    	image: 'pic/Bitmap.png',  // Icon的图像
+    	imageSize: new AMap.Size(30, 30)   // 根据所设置的大小拉伸或压缩图片
+	});
+
+	var mymarker = new AMap.Marker({
+    	position: new AMap.LngLat(121.14622951,31.15897914),
+    	offset: new AMap.Pixel(-14, -14),
+    	icon: icon, // 添加 Icon 图标 URL
+    	title: '我'
+	});
+	map.add(mymarker);
+
+
+	// 创建区域圆：
+	var circle = new AMap.Circle({
+        center: [121.14622951, 31.15897914],
+        radius: 3000, //半径
+        borderWeight: 3,
+        strokeColor: "#FF33FF", 
+        strokeOpacity: 0.2,
+        strokeWeight: 1,
+        strokeOpacity: 0.2,
+        fillOpacity: 0.1,
+        strokeStyle: 'solid',
+        fillColor: '#1791fc',
+        zIndex: 50,
+    })
+    circle.setMap(map)
+
+    var circleEditor = new AMap.CircleEditor(map, circle)
+
+
+
+
+	// 构建学校标记：
+ 	var school_namearr = [];
+    // var school_anarr = [];
+    // var school_isregisteredarr = [];
+    // var school_ishfarr = [];
+    var school_address = [];
+    for (var i in school) {
+        school_namearr.push(school[i].accountname);
+        // school_anarr.push(school[i].accountnumber);
+        // school_isregisteredarr.push(school[i].isregistered);
+        // school_ishfarr.push(school[i].ishf);
+        school_address.push(school[i].address);
+    }
+	var school_markers=[];
+	for(var i in school_namearr) {
+		// if (school_isregisteredarr[i] === '是') {
+		// 	var icon = new AMap.Icon({
+		//     	size: new AMap.Size(30, 40),    // 图标尺寸
+		//     	image: 'pic/学校.png',  // Icon的图像
+		//     	imageSize: new AMap.Size(25, 30)   // 根据所设置的大小拉伸或压缩图片
+		// 	});
+		// 		var marker = new AMap.Marker({
+		// 	    position: [school[i].longitude,school[i].latitude],
+		// 	    offset: new AMap.Pixel(-14, -28),
+		// 		icon: icon, // 添加 Icon 图标 URL
+		// 		//animation: 'AMAP_ANIMATION_BOUNCE'
+		// 	});
+  //   		school_markers.push(marker);
+		// } else {
+		// 	var icon = new AMap.Icon({
+		//     	size: new AMap.Size(30, 40),    // 图标尺寸
+		//     	image: 'pic/学校2.png',  // Icon的图像
+		//     	imageSize: new AMap.Size(25, 30)   // 根据所设置的大小拉伸或压缩图片
+		// 	});
+		// 		var marker = new AMap.Marker({
+		// 	    position: [school[i].longitude,school[i].latitude],
+		// 	    offset: new AMap.Pixel(-14, -28),
+		// 		icon: icon, // 添加 Icon 图标 URL
+		// 		//animation: 'AMAP_ANIMATION_BOUNCE'
+		// 	});
+		// 	school_markers.push(marker);
+		// }
+        var icon = new AMap.Icon({
+                size: new AMap.Size(30, 40),    // 图标尺寸
+                image: 'pic/学校.png',  // Icon的图像
+                imageSize: new AMap.Size(25, 30)   // 根据所设置的大小拉伸或压缩图片
+            });
+                var marker = new AMap.Marker({
+                position: [school[i].longitude,school[i].latitude],
+                offset: new AMap.Pixel(-14, -28),
+                icon: icon, // 添加 Icon 图标 URL
+                //animation: 'AMAP_ANIMATION_BOUNCE'
+            });
+        school_markers.push(marker);
+	}
+	// map.add(school_markers);
+
+    // 构建公司标记：
+    var company_namearr = [];
+    // var company_adbarr = [];
+    // var company_managerarr = [];
+    // var company_pn = [];
+    // var company_mpn = [];
+    // var company_isi = [];
+    // var company_isl = [];
+    // var company_isk = [];
+    // var company_contact = [];
+    var company_address = [];
+    // var company_moreinfo = []
+    for (var i in company) {
+        company_namearr.push(company[i].companyname);
+        // company_adbarr.push(company[i].averagedailybalance);
+        // company_managerarr.push(company[i].manager);
+        // company_pn.push(company[i].phonenumber);
+        // company_mpn.push(company[i].mobilephonenumber);
+        // company_isi.push(company[i].isicustomer);
+        // company_isl.push(company[i].islcustomer);
+        // company_isk.push(company[i].iskcustomer);
+        // company_contact.push(company[i].contact);
+        company_address.push(company[i].address);
+        // company_moreinfo.push(company[i].moreinfo);
+    }
+    var company_markers=[];
+    // var company_markers_isl=[];
+    // var company_markers_isi=[];
+    // var company_markers_rest=[];
+    for(var i in company_namearr) {
+        // if (company_isl[i] === '是') {
+        //     var icon = new AMap.Icon({
+        //         size: new AMap.Size(30, 40),    // 图标尺寸
+        //         image: 'pic/公司.png',  // Icon的图像
+        //         imageSize: new AMap.Size(25, 30)   // 根据所设置的大小拉伸或压缩图片
+        //     });
+        //         var marker = new AMap.Marker({
+        //         position: [company[i].longitude,company[i].latitude],
+        //         offset: new AMap.Pixel(-14, -28),
+        //         icon: icon, // 添加 Icon 图标 URL
+        //         //animation: 'AMAP_ANIMATION_BOUNCE'
+        //     });
+        //     // console.log("islcustomer:"+company_namearr[i]);
+        //     company_markers_isl.push(marker);
+        // } else if (company_isi[i] === '是'){
+        //     var icon = new AMap.Icon({
+        //         size: new AMap.Size(30, 40),    // 图标尺寸
+        //         image: 'pic/公司.png',  // Icon的图像
+        //         imageSize: new AMap.Size(25, 30)   // 根据所设置的大小拉伸或压缩图片
+        //     });
+        //         var marker = new AMap.Marker({
+        //         position: [company[i].longitude,company[i].latitude],
+        //         offset: new AMap.Pixel(-14, -28),
+        //         icon: icon, // 添加 Icon 图标 URL
+        //         //animation: 'AMAP_ANIMATION_BOUNCE'
+        //     });
+        //     company_markers_isi.push(marker);
+        // } else {
+        //     var icon = new AMap.Icon({
+        //         size: new AMap.Size(30, 40),    // 图标尺寸
+        //         image: 'pic/公司2.png',  // Icon的图像
+        //         imageSize: new AMap.Size(25, 30)   // 根据所设置的大小拉伸或压缩图片
+        //     });
+        //         var marker = new AMap.Marker({
+        //         position: [company[i].longitude,company[i].latitude],
+        //         offset: new AMap.Pixel(-14, -28),
+        //         icon: icon, // 添加 Icon 图标 URL
+        //         //animation: 'AMAP_ANIMATION_BOUNCE'
+        //     });
+        //     company_markers_rest.push(marker);
+        // }
+        var icon = new AMap.Icon({
+                size: new AMap.Size(30, 40),    // 图标尺寸
+                image: 'pic/公司.png',  // Icon的图像
+                imageSize: new AMap.Size(25, 30)   // 根据所设置的大小拉伸或压缩图片
+            });
+                var marker = new AMap.Marker({
+                position: [company[i].longitude,company[i].latitude],
+                offset: new AMap.Pixel(-14, -28),
+                icon: icon, // 添加 Icon 图标 URL
+                //animation: 'AMAP_ANIMATION_BOUNCE'
+            });
+            // console.log("islcustomer:"+company_namearr[i]);
+            company_markers.push(marker);
+        
+    }
+    // company_markers = company_markers_isi.concat(company_markers_isl).concat(company_markers_rest);
+    // map.add(company_markers);
+
+    // 构建商户标记：
+    var business_namearr = [];
+    var business_accountnumber = [];
+    var business_address = [];
+    var business_contact = [];
+    var business_phonenumber = [];
+    var business_ispos = [];
+    var business_isqr = [];
+    for (var i in business) {
+        business_namearr.push(business[i].businessname);
+        business_accountnumber.push(business[i].accountnumber);
+        business_address.push(business[i].address);
+        business_contact.push(business[i].contact);
+        business_phonenumber.push(business[i].phonenumber);
+        business_ispos.push(business[i].ispos);
+        business_isqr.push(business[i].isqr);
+    }
+    var business_markers=[];
+    for(var i in business_namearr) {
+        if (business_ispos[i] === '是' || business_isqr[i] === '是') {
+            var icon = new AMap.Icon({
+                size: new AMap.Size(30, 40),    // 图标尺寸
+                image: 'pic/商户.png',  // Icon的图像
+                imageSize: new AMap.Size(25, 30)   // 根据所设置的大小拉伸或压缩图片
+            });
+                var marker = new AMap.Marker({
+                position: [business[i].longitude,business[i].latitude],
+                offset: new AMap.Pixel(-14, -28),
+                icon: icon, // 添加 Icon 图标 URL
+                //animation: 'AMAP_ANIMATION_BOUNCE'
+            });
+            business_markers.push(marker);
+        } else {
+            var icon = new AMap.Icon({
+                size: new AMap.Size(30, 40),    // 图标尺寸
+                image: 'pic/商户2.png',  // Icon的图像
+                imageSize: new AMap.Size(25, 30)   // 根据所设置的大小拉伸或压缩图片
+            });
+                var marker = new AMap.Marker({
+                position: [business[i].longitude,business[i].latitude],
+                offset: new AMap.Pixel(-14, -28),
+                icon: icon, // 添加 Icon 图标 URL
+                //animation: 'AMAP_ANIMATION_BOUNCE'
+            });
+            business_markers.push(marker);
+        }
+    }
+
+    // 构建信息弹窗：
+    var allmarkers = [];
+    allmarkers.push(school_markers, company_markers, business_markers);
+
+    var infoWindow = new AMap.InfoWindow({
+        offset: new AMap.Pixel(0, -30),
+        closeWhenClickMap:true
+        });  //使用默认信息窗体框样式，显示信息内容
+    
+    for (var i = 0; i < allmarkers.length; i ++) {
+        for (var j = 0; j < allmarkers[i].length; j ++) {
+            var marker = allmarkers[i][j];
+            switch (i) {
+                case 0:
+                    marker.content = 
+                    `
+                    <div style=\"padding:7px 0px 0px 0px;\"><h4><strong>${school_namearr[j]}</strong></h4>
+                    <p class='input-item'>地址：${school_address[j]}</p></div>
+                    `;
+                    break;
+                case 1:
+                    marker.content = 
+                    `
+                    <div style=\"padding:7px 0px 0px 0px;\"><h4><strong>${company_namearr[j]}</strong></h4>
+                    <p class='input-item'>地址：${company_address[j]}</p></div>
+                    `;
+                     break;
+                case 2:
+                    marker.content = 
+                    `
+                    <div style=\"padding:7px 0px 0px 0px;\"><h4><strong>${business_namearr[j]}</strong></h4>
+                    <p class='input-item'>地址：${business_address[j]}</p>
+                    <p class='input-item'>联系人：${business_contact[j]}</p>
+                    <p class='input-item'>电话：${business_phonenumber[j]}</p></div>
+                    `;
+            }
+            marker.on('click', markerClick);
+            marker.emit('click', {target: marker});
+
+        }
+
+    }
+
+    
+    function markerClick(e) {
+        infoWindow.setContent(e.target.content);
+        infoWindow.open(map, e.target.getPosition());
+        // console.log("marker click");
+
+    }
+    map.on("complete", function(){
+       // log.success("地图加载完成！");
+       infoWindow.close();
+       // console.log("地图加载完成！");
+    });
+
+
+</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.2.0/iscroll.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- Bootstrap dropdown v4.0.0-alpha -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script> -->
+  <script src="js/drawer.min.js" charset="utf-8"></script>
+  <script>
+    $(document).ready(function() {
+      $('.drawer').drawer();
+    });
+  </script>
+</body>
+</html>

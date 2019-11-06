@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>数据管理</title>
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.0.0/jquery.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="data/data.json"></script>
+    <script src="js/download.js"></script>
+</head>
+<body>
+    <div class="container">
+    <div class="row clearfix">
+    <div class="col-md-12 column">
+    <div class="page-header">
+        <h1>&nbsp;&nbsp;数据管理</h1>
+    </div>
+
+    <ul id="myTab" class="nav nav-tabs">
+        <li class="active"><a href="#schoolPage" data-toggle="tab">添加学校</a></li>
+        <li><a href="#companyPage" data-toggle="tab">添加公司</a></li>
+        <li><a href="#businessPage" data-toggle="tab">添加商户</a></li>
+        <li><a href="#search" data-toggle="tab">查询</a></li>
+        <li><a href="#dele" data-toggle="tab">删除</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="schoolPage">
+            </br></br>
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" >学校名称:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="school_accountname" name="school_accountname" placeholder="请输入学校名称"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">账号:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="school_accountnumber" name="school_accountnumber" placeholder="请输入账号"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">地址:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="school_address" name="school_address" placeholder="请输入地址"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">联系人:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="school_contact" name="school_contact" placeholder="请输入联系人"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">手机号码:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="school_phonenumber" name="school_phonenumber" placeholder="请输入手机号"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">是否注册:</label>
+                    <select id="school_isregistered" class="col-sm-3" style="width:765px;height: 35px;">
+                        <option value="" style="display: none">请选择</option>
+                        <option value="1">是</option>
+                        <option value="2">否</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">是否高频:</label>
+                    <select id="school_ishf" class="col-sm-3" style="width:765px;height: 35px;">
+                        <option value="" style="display: none">请选择</option>
+                        <option value="1">是</option>
+                        <option value="2">否</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" ><a href="https://lbs.amap.com/console/show/picker" target="_blank" >经度:</a></label>
+                   <div class="col-sm-3">
+                      <input type="text" class="form-control" id="school_longitude" name="school_longitude" placeholder="请输入经度（可点击查询）"/>
+                   </div>
+                   <div class="col-sm-1"></div>
+                    <label class="col-sm-1 control-label"><a href="https://maplocation.sjfkai.com/" target="_blank" >纬度:</a></label>
+                   <div class="col-sm-3">
+                      <input type="text" class="form-control" id="school_latitude" name="school_latitude" placeholder="请输入纬度（可点击查询）"/>
+                   </div>
+                </div>
+            </form>
+            </br>
+                <button class="col-sm-offset-1 col-sm-2 btn btn-primary" onclick="addSchoolData()" >添加</button>
+                <button class="col-sm-offset-4 col-sm-2 btn btn-primary" onclick="doDownload()" >下载数据</button>
+        </div>
+        <div class="tab-pane fade" id="companyPage">
+            </br></br>
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" >公司名称:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="company_companyname" name="company_companyname" placeholder="请输入公司名称"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">账号:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="company_accountnumber" name="company_accountnumber" placeholder="请输入账号"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">地址:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="company_address" name="company_address" placeholder="请输入地址"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">联系人:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="company_contact" name="company_contact" placeholder="请输入联系人"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">手机号码:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="company_mobilephonenumber" name="company_mobilephonenumber" placeholder="请输入手机号"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">国际业务:</label>
+                    <select id="company_isicustomer" class="col-sm-3" style="width:765px;height: 35px;">
+                        <option value="" style="display: none">请选择</option>
+                        <option value="1">是</option>
+                        <option value="2">否</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">有贷款:</label>
+                    <select id="company_islcustomer" class="col-sm-3" style="width:765px;height: 35px;">
+                        <option value="" style="display: none">请选择</option>
+                        <option value="1">是</option>
+                        <option value="2">否</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" ><a href="https://lbs.amap.com/console/show/picker" target="_blank" >经度:</a></label>
+                   <div class="col-sm-3">
+                      <input type="text" class="form-control" id="company_longitude" name="company_longitude" placeholder="请输入经度（可点击查询）"/>
+                   </div>
+                   <div class="col-sm-1"></div>
+                    <label class="col-sm-1 control-label"><a href="https://maplocation.sjfkai.com/" target="_blank" >纬度:</a></label>
+                   <div class="col-sm-3">
+                      <input type="text" class="form-control" id="company_latitude" name="company_latitude" placeholder="请输入纬度（可点击查询）"/>
+                   </div>
+                </div>
+            </form>
+            </br>
+                <button class="col-sm-offset-1 col-sm-2 btn btn-primary" onclick="addCompanyData()" >添加</button>
+                <button class="col-sm-offset-4 col-sm-2 btn btn-primary" onclick="doDownload()" >下载数据</button>
+        </div>
+        <div class="tab-pane fade" id="businessPage">
+            </br></br>
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" >商户名称:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="business_businessname" name="business_businessname" placeholder="请输入商户名称"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">账号:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="business_accountnumber" name="business_accountnumber" placeholder="请输入账号"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">地址:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="business_address" name="business_address" placeholder="请输入地址"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">联系人:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="business_contact" name="business_contact" placeholder="请输入联系人"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">手机号码:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="business_phonenumber" name="business_phonenumber" placeholder="请输入手机号"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">有POS:</label>
+                    <select id="business_ispos" class="col-sm-3" style="width:765px;height: 35px;">
+                        <option value="" style="display: none">请选择</option>
+                        <option value="1">是</option>
+                        <option value="2">否</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">有静态码:</label>
+                    <select id="business_isqr" class="col-sm-3" style="width:765px;height: 35px;">
+                        <option value="" style="display: none">请选择</option>
+                        <option value="1">是</option>
+                        <option value="2">否</option>
+                    </select>
+                   
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" ><a href="https://lbs.amap.com/console/show/picker" target="_blank">经度:</a></label>
+                   <div class="col-sm-3">
+                      <input type="text" class="form-control" id="business_longitude" name="business_longitude" placeholder="请输入经度（可点击查询）" />
+                   </div>
+                   <div class="col-sm-1"></div>
+                    <label class="col-sm-1 control-label"><a href="https://maplocation.sjfkai.com/" target="_blank">纬度:</a></label>
+                   <div class="col-sm-3">
+                      <input type="text" class="form-control" id="business_latitude" name="business_latitude" placeholder="请输入纬度（可点击查询）"/>
+                   </div>
+                </div>
+            </form>
+            </br>
+                <button class="col-sm-offset-1 col-sm-2 btn btn-primary" onclick="addBusinessData()" >添加</button>
+                <button class="col-sm-offset-4 col-sm-2 btn btn-primary" onclick="doDownload()" >下载数据</button>
+        </div>
+        <div class="tab-pane fade" id="search">
+            </br></br>
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" >名称:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="search_name" name="search_name" placeholder="请输入完整正确的名称进行查询"/>
+                   </div>
+                </div>
+            </form>
+            </br>
+                <button class="col-sm-offset-1 col-sm-2 btn btn-primary" onclick="doSearch()" >搜索</button>
+        </div>
+        <div class="tab-pane fade" id="dele">
+            </br></br>
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" >名称:</label>
+                   <div class="col-sm-8">
+                      <input type="text" class="form-control" id="dele_name" name="dele_name" placeholder="请输入完整正确的名称进行删除"/>
+                   </div>
+                </div>
+            </form>
+            </br>
+                <button class="col-sm-offset-1 col-sm-2 btn btn-danger" onclick="doDele()" >删除</button>
+        </div>
+    </div>
+    </div>
+    </div> 
+    </div>
+    <script>
+        function addSchoolData() {
+            var school_accountname = document.getElementById("school_accountname").value;
+            var school_accountnumber = document.getElementById("school_accountnumber").value;
+            var school_phonenumber = document.getElementById("school_phonenumber").value;
+            var school_contact = document.getElementById("school_contact").value;
+            var school_ishf = $("#school_ishf option:selected").text();
+            var school_isregistered = $("#school_isregistered option:selected").text();
+            var school_longitude = document.getElementById("school_longitude").value;
+            var school_latitude = document.getElementById("school_latitude").value;
+            if (school_accountname===""||school_phonenumber===""||school_contact===""||school_ishf==="请选择"||school_isregistered==="请选择"||school_longitude===""||school_latitude==="") {
+                alert("请正确完整填写数据！");
+            } else {
+                var newOj = {
+                    subbranch: "青浦",
+                    category: "幼儿园",
+                    departmentname: "上海市青浦区城中支行",
+                    departmentnumber: "1103",
+                    accountnumber: school_accountnumber,
+                    accountname: school_accountname,
+                    isregistered: school_isregistered,
+                    ishf: school_ishf,
+                    longitude: school_longitude,
+                    latitude: school_latitude
+                };
+                school.push(newOj);
+                alert("添加“"+school_accountname+"”数据成功！");
+            }
+        }
+        
+        function addCompanyData() {
+            var company_companyname = document.getElementById("company_companyname").value;
+            var company_accountnumber = document.getElementById("company_accountnumber").value;
+            var company_mobilephonenumber = document.getElementById("company_mobilephonenumber").value;
+            var company_contact = document.getElementById("company_contact").value;
+            var company_isicustomer = $("#company_isicustomer option:selected").text();
+            var company_islcustomer = $("#company_islcustomer option:selected").text();
+            var company_longitude = document.getElementById("company_longitude").value;
+            var company_latitude = document.getElementById("company_latitude").value;
+            if (company_companyname===""||company_accountnumber===""||company_mobilephonenumber===""||company_contact===""||company_isicustomer==="请选择"||company_islcustomer==="请选择"||company_longitude===""||company_latitude==="") {
+                alert("请正确完整填写数据！");
+            } else {
+                var newOj = {
+                    companyname: company_companyname,
+                    averagedailybalance: "66342570",
+                    manager: "顾佳磊",
+                    phonenumber: "xxxxxxxx",
+                    mobilephonenumber: company_mobilephonenumber,
+                    isicustomer: company_isicustomer,
+                    islcustomer: company_islcustomer,
+                    iskcustomer: "是",
+                    Contact: company_contact,
+                    longitude: company_longitude,
+                    latitude: company_latitude
+                }
+                company.push(newOj);
+                alert("添加“"+company_companyname+"”数据成功！")
+            }
+        }
+
+        function addBusinessData() {
+            var business_businessname = document.getElementById("business_businessname").value;
+            var business_accountnumber = document.getElementById("business_accountnumber").value;
+            var business_address = document.getElementById("business_address").value;
+            var business_contact = document.getElementById("business_contact").value;
+            var business_phonenumber = document.getElementById("business_phonenumber").value;
+            var business_ispos = $("#business_ispos option:selected").text();
+            var business_isqr = $("#business_isqr option:selected").text();
+            var business_longitude = document.getElementById("business_longitude").value;
+            var business_latitude = document.getElementById("business_latitude").value;
+            if (business_businessname===""||business_accountnumber===""||business_address===""||business_contact===""||business_phonenumber===""||business_ispos==="请选择"||business_isqr==="请选择"||business_longitude===""||business_latitude==="") {
+                alert("请正确完整填写数据！");
+            } else {
+                var newOj = {
+                    businessname: business_businessname, 
+                    accountnumber: business_accountnumber, 
+                    address: business_address, 
+                    contact: business_contact, 
+                    phonenumber: business_phonenumber, 
+                    ispos: business_ispos, 
+                    isqr: business_isqr, 
+                    longitude: business_longitude, 
+                    latitude: business_latitude
+                };
+                business.push(newOj);
+                alert("添加“"+business_businessname+"”数据成功！")
+            }
+        }
+
+        function doDele() {
+            function findSchool(obj) { 
+                return obj.accountname === document.getElementById("dele_name").value;
+            }
+            function findCompany(obj) { 
+                return obj.companyname === document.getElementById("dele_name").value;
+            }
+            function findBusiness(obj) { 
+                return obj.businessname === document.getElementById("dele_name").value;
+            }
+            var str = "";
+            if(school.find(findSchool)) {
+                for (var i in school.find(findSchool)) {
+                    str += i + ":" + school.find(findSchool)[i] + "\n";
+                }
+                if(confirm(str)) {
+                    school.splice(contains(school,school.find(findSchool)),1);
+                    alert("成功删除！");
+                }
+            } else if(company.find(findCompany)) {
+                for (var i in company.find(findCompany)) {
+                    str += i + ":" + company.find(findCompany)[i] + "\n";
+                }
+                if(confirm(str)) {
+                    company.splice(contains(company,company.find(findCompany)),1);
+                    alert("成功删除！");
+                }
+            } else if(business.find(findBusiness)) {
+                for (var i in business.find(findBusiness)) {
+                    str += i + ":" + business.find(findBusiness)[i] + "\n";
+                }
+                if(confirm(str)) {
+                    business.splice(contains(business,business.find(findBusiness)),1);
+                    alert("成功删除！");
+                }
+            } else {
+                alert("无此数据");
+            }
+        }
+
+        function contains(arrays, obj) {
+            var i = arrays.length;
+            while (i--) {
+                if (arrays[i] === obj) {
+                    return i;
+                }
+            }
+            return false;
+        }
+
+        function doSearch() {
+            function findSchool(obj) { 
+                return obj.accountname === document.getElementById("search_name").value;
+            }
+            function findCompany(obj) { 
+                return obj.companyname === document.getElementById("search_name").value;
+            }
+            function findBusiness(obj) { 
+                return obj.businessname === document.getElementById("search_name").value;
+            }
+            var str = "";
+            if(school.find(findSchool)) {
+                for (var i in school.find(findSchool)) {
+                    str += i + ":" + school.find(findSchool)[i] + "\n";
+                }
+                alert(str);
+            } else if(company.find(findCompany)) {
+                for (var i in company.find(findCompany)) {
+                    str += i + ":" + company.find(findCompany)[i] + "\n";
+                }
+                alert(str);
+            } else if(business.find(findBusiness)) {
+                for (var i in business.find(findBusiness)) {
+                    str += i + ":" + business.find(findBusiness)[i] + "\n";
+                }
+                alert(str);
+            } else {
+                alert("无此数据");
+            }
+        }
+
+        function doDownload() {
+            school_dataString = JSON.stringify(school);
+            company_dataString = JSON.stringify(company);
+            business_dataString = JSON.stringify(business);
+
+
+            var dataString = "var school=" + school_dataString + ";" + "var company=" + company_dataString + ";" + "var business=" + business_dataString + ";";
+            download(dataString, "data.json", "json/plain");
+        }
+
+    </script>
+</body>
+</html>
